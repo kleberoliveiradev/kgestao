@@ -76,6 +76,8 @@ window.KGESTAO_CONFIG = {
 
 5. Salve o arquivo `config.js`. Pronto! O sistema agora está conectado ao seu banco real na nuvem!
 
+> 💡 **Dica Rápida:** Você também pode conectar sem abrir código! Basta abrir seu painel (`dashboard.html`), clicar no botão **"⚙ Conectar Supabase"** no topo, colar sua URL e Chave Pública e clicar em **"Salvar e Conectar"**. O painel conecta instantaneamente!
+
 ---
 
 ## 🚀 Passo 4: Como colocar no ar de graça (Vercel ou Netlify)

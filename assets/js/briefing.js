@@ -687,7 +687,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
       <div style="margin-top: 28px; padding-top: 14px; border-top: 1px solid #e0e0e0; font-size: 10px; color: #888888; display: flex; justify-content: space-between; align-items: center;">
         <div>KGESTÃO DE MARCAS • Design Estratégico & Identidade de Alto Valor</div>
-        <div>Destino oficial: ${escapeHtml(config.notificacoes?.emailDestino || 'design.excelencia@gmail.com')}</div>
+        <div>WhatsApp: ${escapeHtml(config.marca?.whatsapp || '5511983467706')} • Painel do Diretor</div>
       </div>
     `;
 
@@ -726,60 +726,22 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  // Função para envio automático do Briefing por E-mail
-  async function sendBriefingEmail(data) {
-    const emailDestino = config.notificacoes?.emailDestino || "design.excelencia@gmail.com";
-    const assunto = (config.notificacoes?.assuntoBriefing || "Briefing Preenchido") + ` - ${data.nome} (${data.empresa || 'Nova Marca'})`;
-    const summaryText = buildFormattedSummary();
-
-    // 1. Envio via EmailJS se configurado no config.js
-    const emailjsCfg = config.notificacoes?.emailjs;
-    if (emailjsCfg && emailjsCfg.publicKey && emailjsCfg.serviceId && emailjsCfg.templateId && typeof emailjs !== "undefined") {
-      try {
-        emailjs.init(emailjsCfg.publicKey);
-        await emailjs.send(emailjsCfg.serviceId, emailjsCfg.templateId, {
-          to_email: emailDestino,
-          subject: assunto,
-          client_name: data.nome,
-          client_company: data.empresa,
-          client_whatsapp: data.contato,
-          message_summary: summaryText,
-          protocol: data.lastProtocol
-        });
-        console.log("✓ E-mail do briefing enviado com sucesso para", emailDestino);
-        return;
-      } catch (err) {
-        console.warn("EmailJS retornou aviso:", err);
-      }
-    }
-
-    // 2. Disparo de notificação serverless via Web3Forms (gratuito e direto para o e-mail)
-    try {
-      await fetch("https://api.web3forms.com/submit", {
-        method: "POST",
-        headers: { "Content-Type": "application/json", "Accept": "application/json" },
-        body: JSON.stringify({
-          access_key: "62ea0a9e-0010-48e0-bb17-8e6c469f37ef",
-          to: emailDestino,
-          from_name: "KGestão de Marcas • Briefing",
-          subject: assunto,
-          cliente: data.nome,
-          empresa: data.empresa,
-          whatsapp: data.contato,
-          protocolo: data.lastProtocol,
-          resumo_completo: summaryText
-        })
-      });
-      console.log("✓ Notificação de e-mail enviada para", emailDestino);
-    } catch (err) {
-      console.log("Processo de notificação concluído.");
-    }
+  // Função para montar mensagem estruturada de notificação no WhatsApp de Kleber Oliveira
+  function buildWhatsAppNotification(data) {
+    const tipos = Array.isArray(data.tipo) ? data.tipo.join(", ") : (data.tipo || "Identidade Visual");
+    let msg = `Olá Kleber! Sou ${data.nome}${data.empresa ? ' da ' + data.empresa : ''}. Acabei de preencher o briefing no seu site!\n\n`;
+    msg += `📋 *Protocolo:* ${data.lastProtocol || 'KG-CONFIRMADO'}\n`;
+    msg += `🎯 *Escopo:* ${tipos}\n`;
+    if (data.prazo) msg += `⏱ *Prazo previsto:* ${data.prazo}\n`;
+    if (data.verba) msg += `💰 *Investimento previsto:* ${data.verba}\n`;
+    msg += `\nAs respostas completas já estão gravadas no seu painel. Estou anexando o documento em PDF a seguir!`;
+    return msg;
   }
 
   document.getElementById("btn-submit").onclick = async () => {
     const submitBtn = document.getElementById("btn-submit");
     submitBtn.disabled = true;
-    submitBtn.textContent = "Gerando dossiê e gravando respostas...";
+    submitBtn.textContent = "Gravando respostas no painel e gerando PDF...";
 
     try {
       const payload = {
@@ -802,18 +764,30 @@ document.addEventListener("DOMContentLoaded", () => {
         resumo_formatado: buildFormattedSummary()
       };
 
+      // 1. Grava no banco de dados / painel do estúdio
       const result = await window.KGestaoDB.createBriefing(payload);
       formData.lastProtocol = result.id || ("KG-" + Math.floor(100000 + Math.random() * 900000));
       payload.lastProtocol = formData.lastProtocol;
       localStorage.removeItem("kgestao_briefing_draft");
 
-      // Dispara o e-mail para design.excelencia@gmail.com com assunto 'Briefing Preenchido'
-      sendBriefingEmail(payload);
+      // 2. Faz o download automático do PDF oficial para o cliente poder anexar
+      downloadDossierPdf(formData);
 
+      // 3. Monta link do WhatsApp oficial de Kleber Oliveira
+      const whatsMsg = buildWhatsAppNotification(formData);
+      const whatsUrl = `https://wa.me/${marca.whatsapp}?text=${encodeURIComponent(whatsMsg)}`;
+
+      // 4. Exibe a tela de sucesso
       currentStep = STEPS.length + 1;
       render();
+
+      // 5. Abre automaticamente o WhatsApp com a notificação pronta para envio
+      setTimeout(() => {
+        window.open(whatsUrl, "_blank");
+      }, 800);
+
     } catch (err) {
-      alert("Ocorreu uma instabilidade na gravação em nuvem. Suas respostas não foram perdidas: você pode enviar diretamente pelo WhatsApp.");
+      alert("Ocorreu uma instabilidade na gravação. Suas respostas não foram perdidas: você pode enviar diretamente pelo WhatsApp.");
       submitBtn.disabled = false;
       submitBtn.textContent = "Tentar Enviar Novamente";
     }
@@ -822,9 +796,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 // 4. Tela de Confirmação e Sucesso
 function renderSuccess() {
-  const formattedText = buildFormattedSummary();
-  const whatsMsg = `Olá Kleber! Sou ${formData.nome}${formData.empresa ? ' da ' + formData.empresa : ''}. Acabei de preencher o briefing no seu site!\n\nProtocolo: ${formData.lastProtocol || 'KG-CONFIRMADO'}\nEstou anexando o arquivo PDF com as respostas completas em seguida!\n\nResumo:\n${formattedText}`;
-
+  const whatsMsg = buildWhatsAppNotification(formData);
   const whatsUrl = `https://wa.me/${marca.whatsapp}?text=${encodeURIComponent(whatsMsg)}`;
 
   appEl.innerHTML = `
@@ -833,27 +805,27 @@ function renderSuccess() {
         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"></path></svg>
       </div>
 
-      <h1 style="margin-bottom: 10px;">Briefing Recebido com Sucesso</h1>
-      <p style="font-size: 1.05rem; line-height: 1.6; max-width: 580px;">
-        Obrigado, <strong>${escapeHtml(formData.nome)}</strong>. As informações do seu projeto já foram registradas no sistema do estúdio e o e-mail de notificação foi enviado para análise direta de <strong>Kleber Oliveira</strong>.
+      <h1 style="margin-bottom: 10px;">Briefing Salvo no Painel!</h1>
+      <p style="font-size: 1.05rem; line-height: 1.6; max-width: 580px; margin: 0 auto 20px;">
+        Obrigado, <strong>${escapeHtml(formData.nome)}</strong>! Suas respostas já foram registradas no painel do estúdio e uma notificação direta foi gerada para o WhatsApp de <strong>Kleber Oliveira</strong>.
       </p>
 
       <div class="success-ref-box">
-        <div style="font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--tx-muted); margin-bottom: 4px;">Código de Referência</div>
+        <div style="font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--tx-muted); margin-bottom: 4px;">Código do Briefing no Painel</div>
         <div style="font-family: var(--font-display); font-size: 1.25rem; font-weight: 700;">${escapeHtml(formData.lastProtocol || 'KG-CONFIRMADO')}</div>
       </div>
 
       <div class="success-actions-box" style="display: flex; flex-direction: column; gap: 12px; max-width: 440px; margin: 0 auto; width: 100%;">
         
-        <!-- Botão Principal: WhatsApp + Download Automático do PDF -->
-        <button type="button" class="btn btn-wa" id="btn-wa-with-pdf" style="padding: 16px 24px; font-size: 0.95rem; width: 100%; justify-content: center;">
+        <!-- Botão Principal: WhatsApp -->
+        <a href="${whatsUrl}" target="_blank" rel="noopener" class="btn btn-wa" id="btn-wa-with-pdf" style="padding: 16px 24px; font-size: 0.95rem; width: 100%; justify-content: center; text-decoration: none;">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981z"/></svg>
-          Enviar pelo WhatsApp com Anexo do PDF
-        </button>
+          Abrir WhatsApp com Kleber
+        </a>
 
         <!-- Banner com instrução clara -->
-        <div id="wa-pdf-hint" style="display: none; background: rgba(37, 211, 102, 0.1); border: 1px solid rgba(37, 211, 102, 0.35); border-radius: 12px; padding: 12px 14px; font-size: 0.82rem; color: var(--tx-primary); text-align: left; line-height: 1.45;">
-          📎 <strong>PDF baixado no seu dispositivo!</strong> Na janela do WhatsApp que foi aberta, basta tocar no ícone de anexo (clips) e enviar o arquivo PDF baixado para Kleber.
+        <div id="wa-pdf-hint" style="background: rgba(37, 211, 102, 0.1); border: 1px solid rgba(37, 211, 102, 0.35); border-radius: 12px; padding: 12px 14px; font-size: 0.82rem; color: var(--tx-primary); text-align: left; line-height: 1.45;">
+          📎 <strong>Dossiê em PDF gerado!</strong> O PDF com suas respostas completas foi baixado no seu aparelho para você anexar na conversa do WhatsApp caso deseje.
         </div>
 
         <!-- Botão Secundário: Baixar / Salvar Cópia do PDF -->
@@ -868,17 +840,6 @@ function renderSuccess() {
       </div>
     </div>
   `;
-
-  document.getElementById("btn-wa-with-pdf").onclick = async () => {
-    const hint = document.getElementById("wa-pdf-hint");
-    if (hint) hint.style.display = "block";
-    // 1. Gera e faz o download automático do PDF oficial
-    downloadDossierPdf(formData);
-    // 2. Abre a conversa no WhatsApp com texto estruturado
-    setTimeout(() => {
-      window.open(whatsUrl, "_blank");
-    }, 900);
-  };
 
   document.getElementById("btn-download-pdf").onclick = () => {
     downloadDossierPdf(formData);

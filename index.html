@@ -15,7 +15,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
   <!-- Estilos -->
-  <link rel="stylesheet" href="assets/css/style.css">
+  <link rel="stylesheet" href="assets/css/style.css?v=6">
 
   <script>
     // Recupera tema do localStorage (Padrão: light / Off-white)
@@ -209,17 +209,24 @@
       </div>
     </a>
 
-    <!-- Card 03: Formulário de IDV/Logo -->
-    <a href="briefing.html" class="numbered-item-card" title="Formulário de IDV/Logo">
+    <!-- Card 03: Formulário de IDV/Logo (Destaque Principal de Conversão) -->
+    <a href="briefing.html" class="numbered-item-card featured-form-card" title="Formulário de IDV/Logo">
       <div class="numbered-left">
-        <div class="number-square">03</div>
+        <div class="number-square number-square-featured">03</div>
         <div class="numbered-content">
-          <div class="numbered-title" data-i18n="card3_title">Formulário de IDV/Logo</div>
+          <div class="numbered-title-row">
+            <span class="numbered-title" data-i18n="card3_title">Formulário de IDV/Logo</span>
+            <span class="highlight-chip-pulse">
+              <span class="pulse-dot"></span>
+              <span data-i18n="card3_chip">Preenchimento Online</span>
+            </span>
+          </div>
           <div class="numbered-desc" data-i18n="card3_desc">Preencha em 5 etapas rápidas e receba proposta personalizada.</div>
         </div>
       </div>
-      <div class="arrow-icon-square">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="7" y1="17" x2="17" y2="7"></line><polyline points="7 7 17 7 17 17"></polyline></svg>
+      <div class="form-cta-pill">
+        <span data-i18n="card3_btn">Preencher</span>
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="7" y1="17" x2="17" y2="7"></line><polyline points="7 7 17 7 17 17"></polyline></svg>
       </div>
     </a>
   </section>
@@ -345,7 +352,7 @@
         <span data-i18n="footer_copy">© 2026 Kleber Oliveira • KGestão de Marcas</span>
         <div class="footer-bottom-right">
           <span class="footer-motto">“A fé na vitória tem que ser inabalável”</span>
-          <a href="dashboard.html" class="footer-painel-btn" title="Área do Diretor (Dashboard)">Painel</a>
+          <a href="login.html" class="footer-painel-btn" title="Área do Diretor (Login Restrito)">Painel</a>
         </div>
       </div>
     </div>

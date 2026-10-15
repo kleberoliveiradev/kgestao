@@ -23,16 +23,10 @@ window.KGESTAO_CONFIG = {
     site: "https://kgestao.com.br"
   },
 
-  // Configuração de Notificações e Envio de Briefing por E-mail
-  notificacoes: {
-    emailDestino: "design.excelencia@gmail.com",
-    assuntoBriefing: "Briefing Preenchido",
-    // Configurações do EmailJS (para envio com anexo PDF automático direto do navegador)
-    emailjs: {
-      serviceId: "",  // ID do serviço no EmailJS (ex: 'service_kgestao')
-      templateId: "", // ID do modelo no EmailJS (ex: 'template_briefing')
-      publicKey: ""   // Chave pública do EmailJS
-    }
+  // Acesso Exclusivo do Diretor (Login Fixo e Restrito ao Painel Administrativo)
+  admin: {
+    usuario: "kleberoliveira", // Login fixo e eterno
+    senha: "89545720!"        // Senha fixa e eterna
   },
 
   // Configuração do Portfólio Behance

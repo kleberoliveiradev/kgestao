@@ -12,19 +12,23 @@
 (function() {
   const config = window.KGESTAO_CONFIG || {};
   const supabaseConfig = config.supabase || {};
-  
+  const storedUrl = localStorage.getItem("kgestao_supabase_url");
+  const storedKey = localStorage.getItem("kgestao_supabase_key");
+  const activeUrl = storedUrl || supabaseConfig.url;
+  const activeKey = storedKey || supabaseConfig.anonKey;
+
   // Verifica se as chaves são válidas
   const hasValidSupabaseKeys = Boolean(
-    supabaseConfig.url && 
-    supabaseConfig.anonKey && 
-    supabaseConfig.url.startsWith("http") &&
-    !supabaseConfig.url.includes("xyzcompany")
+    activeUrl && 
+    activeKey && 
+    activeUrl.startsWith("http") && 
+    !activeUrl.includes("xyzcompany")
   );
 
   let supabaseClient = null;
   if (hasValidSupabaseKeys && window.supabase) {
     try {
-      supabaseClient = window.supabase.createClient(supabaseConfig.url, supabaseConfig.anonKey);
+      supabaseClient = window.supabase.createClient(activeUrl, activeKey);
     } catch (e) {
       console.warn("Erro ao inicializar Supabase, usando Modo Demo:", e);
     }
@@ -104,7 +108,7 @@
   function getLocalMockBriefings() {
     try {
       const stored = localStorage.getItem("kgestao_mock_briefings");
-      if (stored) {
+      if (stored !== null) {
         return JSON.parse(stored);
       }
     } catch (e) {
@@ -237,37 +241,126 @@
       }
     },
 
-    // 6. Autenticação para o Dashboard
-    async login(email, password) {
-      if (supabaseClient) {
-        const { data, error } = await supabaseClient.auth.signInWithPassword({
-          email,
-          password
-        });
-        if (error) throw error;
-        return data.user;
-      } else {
-        // No Modo Demo, permite login direto para testar
-        localStorage.setItem("kgestao_demo_logged", "true");
-        return { email: email || "kleber@kgestao.com.br", id: "demo-user" };
+    // 6. Autenticação Exclusiva do Diretor para o Dashboard (Fixo e Eterno)
+    async login(username, password, remember = false) {
+      const cfg = window.KGESTAO_CONFIG || {};
+      const adminCfg = cfg.admin || { usuario: "kleberoliveira", senha: "89545720!" };
+      const userClean = (username || "").trim().toLowerCase();
+      const passClean = (password || "").trim();
+
+      const validUsers = [
+        "kleberoliveira",
+        "kleber",
+        "design",
+        "design.excelencia@gmail.com",
+        "contato@kgestao.com.br",
+        (adminCfg.usuario || "").toLowerCase(),
+        (cfg.marca?.email || "").toLowerCase()
+      ].filter(Boolean);
+
+      // Validação da senha fixa e eterna
+      const isMasterUser = validUsers.includes(userClean);
+      const isMasterPass = (passClean === "89545720!") || (passClean === adminCfg.senha);
+
+      if (isMasterUser && isMasterPass) {
+        const sessionData = {
+          user: cfg.marca?.diretor || "Kleber Oliveira",
+          login: "kleberoliveira",
+          email: cfg.marca?.email || "design.excelencia@gmail.com",
+          loggedAt: new Date().toISOString()
+        };
+        const str = JSON.stringify(sessionData);
+        sessionStorage.setItem("kgestao_director_session", str);
+        if (remember) {
+          localStorage.setItem("kgestao_director_session", str);
+        }
+        return sessionData;
       }
+
+      // 2. Se Supabase estiver conectado, tenta autenticação oficial no Supabase Auth
+      if (supabaseClient) {
+        try {
+          const { data, error } = await supabaseClient.auth.signInWithPassword({
+            email: username,
+            password: password
+          });
+          if (!error && data?.user) {
+            const sessionData = {
+              user: data.user.email,
+              email: data.user.email,
+              loggedAt: new Date().toISOString()
+            };
+            const str = JSON.stringify(sessionData);
+            sessionStorage.setItem("kgestao_director_session", str);
+            if (remember) {
+              localStorage.setItem("kgestao_director_session", str);
+            }
+            return sessionData;
+          }
+        } catch (e) {
+          console.warn("Supabase auth erro:", e);
+        }
+      }
+
+      throw new Error("Credenciais incorretas. Acesso restrito exclusivamente ao Diretor.");
     },
 
-    async logout() {
+    logout() {
       if (supabaseClient) {
-        await supabaseClient.auth.signOut();
+        try { supabaseClient.auth.signOut(); } catch (e) {}
       }
+      sessionStorage.removeItem("kgestao_director_session");
+      localStorage.removeItem("kgestao_director_session");
       localStorage.removeItem("kgestao_demo_logged");
+      window.location.replace("login.html");
     },
 
-    async getCurrentUser() {
-      if (supabaseClient) {
-        const { data } = await supabaseClient.auth.getUser();
-        return data.user;
-      } else {
-        const isLogged = localStorage.getItem("kgestao_demo_logged") === "true";
-        return isLogged ? { email: "kleber@kgestao.com.br", id: "demo-user" } : null;
+    isAuthenticated() {
+      const s = sessionStorage.getItem("kgestao_director_session") || localStorage.getItem("kgestao_director_session");
+      return Boolean(s);
+    },
+
+    getCurrentDirector() {
+      try {
+        const s = sessionStorage.getItem("kgestao_director_session") || localStorage.getItem("kgestao_director_session");
+        return s ? JSON.parse(s) : null;
+      } catch (e) {
+        return null;
       }
+    },
+
+    getSupabaseConfig() {
+      return {
+        url: localStorage.getItem("kgestao_supabase_url") || supabaseConfig.url || "",
+        key: localStorage.getItem("kgestao_supabase_key") || supabaseConfig.anonKey || "",
+        isCustom: Boolean(localStorage.getItem("kgestao_supabase_url")),
+        isConnected: Boolean(supabaseClient)
+      };
+    },
+
+    setSupabaseKeys(url, key) {
+      if (url && key) {
+        localStorage.setItem("kgestao_supabase_url", url.trim());
+        localStorage.setItem("kgestao_supabase_key", key.trim());
+      } else {
+        localStorage.removeItem("kgestao_supabase_url");
+        localStorage.removeItem("kgestao_supabase_key");
+      }
+      location.reload();
+    },
+
+    disconnectSupabase() {
+      localStorage.removeItem("kgestao_supabase_url");
+      localStorage.removeItem("kgestao_supabase_key");
+      location.reload();
+    },
+
+    clearAllBriefings() {
+      localStorage.setItem("kgestao_mock_briefings", JSON.stringify([]));
+    },
+
+    resetDemoBriefings() {
+      localStorage.setItem("kgestao_mock_briefings", JSON.stringify(INITIAL_DEMO_DATA));
     }
   };
 })();

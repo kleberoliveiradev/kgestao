@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="pt-BR" data-theme="light">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Acesso do Diretor | KGestão de Marcas</title>
+  <meta name="description" content="Acesso exclusivo para Kleber Oliveira gerenciar briefings e propostas no Painel Administrativo.">
+
+  <!-- Favicon / Monograma K Oficial (Preto) -->
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='595 415 250 245'%3E%3Cpolygon fill='%23111111' points='600.16,485.66 600.16,570.57 665.38,485.66'/%3E%3Cpolygon fill='%23111111' points='600.16,655.47 665.38,570.57 600.16,570.57'/%3E%3Cpolygon fill='%23111111' points='774.25,422.05 665.38,570.57 708.85,570.57 774.09,655.47 839.31,655.47 773.99,570.57 730.61,570.57 839.31,422.05'/%3E%3C/svg%3E">
+
+  <!-- Google Fonts: Inter + Plus Jakarta Sans -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- Estilos Oficiais -->
+  <link rel="stylesheet" href="assets/css/style.css?v=6">
+
+  <script>
+    (function() {
+      // 1. Aplica o tema salvo imediatamente
+      const savedTheme = localStorage.getItem("kgestao_theme") || "light";
+      document.documentElement.setAttribute("data-theme", savedTheme);
+
+      // 2. Se já estiver autenticado como Diretor, redireciona direto para o Dashboard
+      const session = sessionStorage.getItem("kgestao_director_session") || localStorage.getItem("kgestao_director_session");
+      if (session) {
+        window.location.replace("dashboard.html");
+      }
+    })();
+  </script>
+</head>
+<body class="login-page-body">
+
+  <!-- Topbar Minimalista -->
+  <header class="login-topbar">
+    <a href="index.html" class="header-logo" title="KGestão de Marcas">
+      <img src="logo/logo-oficial/logo-01.svg" alt="KGestão de Marcas" class="header-logo-img logo-light" style="height: 30px;">
+      <img src="logo/logo-oficial/logo-02.svg" alt="KGestão de Marcas" class="header-logo-img logo-dark" style="height: 30px;">
+    </a>
+
+    <!-- Alternador de Tema Apple -->
+    <button class="btn-icon" id="theme-toggle" title="Alternar tema" aria-label="Alternar tema">
+      <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="12" cy="12" r="5"></circle>
+        <line x1="12" y1="1" x2="12" y2="3"></line>
+        <line x1="12" y1="21" x2="12" y2="23"></line>
+        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+        <line x1="1" y1="12" x2="3" y2="12"></line>
+        <line x1="21" y1="12" x2="23" y2="12"></line>
+        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+      </svg>
+    </button>
+  </header>
+
+  <!-- Conteúdo Central -->
+  <main class="login-main">
+    <div class="login-card" id="login-card">
+      
+      <!-- Monograma Oficial da Marca -->
+      <div class="login-brand-icon-wrap" title="KGestão de Marcas">
+        <svg width="26" height="26" viewBox="595 415 250 245">
+          <polygon fill="#111111" class="logo-poly-1" points="600.16,485.66 600.16,570.57 665.38,485.66"/>
+          <polygon fill="#111111" class="logo-poly-2" points="600.16,655.47 665.38,570.57 600.16,570.57"/>
+          <polygon fill="#fe016e" points="774.25,422.05 665.38,570.57 708.85,570.57 774.09,655.47 839.31,655.47 773.99,570.57 730.61,570.57 839.31,422.05"/>
+        </svg>
+      </div>
+
+      <!-- Badge de Identificação -->
+      <div>
+        <div class="login-badge">
+          <span class="login-badge-dot"></span>
+          Área do Diretor
+        </div>
+      </div>
+
+      <h1 class="login-title">Painel Executivo</h1>
+      <p class="login-subtitle">Gestão estratégica de briefings e projetos da KGestão de Marcas.</p>
+
+      <!-- Mensagem de Erro -->
+      <div class="login-error-alert" id="login-error" role="alert">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0;">
+          <circle cx="12" cy="12" r="10"></circle>
+          <line x1="12" y1="8" x2="12" y2="12"></line>
+          <line x1="12" y1="16" x2="12.01" y2="16"></line>
+        </svg>
+        <span id="login-error-text">Credenciais incorretas. Acesso restrito ao Diretor.</span>
+      </div>
+
+      <!-- Formulário de Login -->
+      <form class="login-form" id="login-form" novalidate>
+        
+        <!-- Campo Usuário -->
+        <div class="login-field">
+          <label for="login-user">Usuário ou E-mail</label>
+          <div class="login-input-wrap">
+            <span class="login-field-icon">
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                <circle cx="12" cy="7" r="4"></circle>
+              </svg>
+            </span>
+            <input 
+              type="text" 
+              id="login-user" 
+              name="username" 
+              placeholder="kleberoliveira" 
+              autocomplete="username" 
+              required
+              autofocus
+            >
+          </div>
+        </div>
+
+        <!-- Campo Senha -->
+        <div class="login-field">
+          <label for="login-pass">Senha de Acesso</label>
+          <div class="login-input-wrap">
+            <span class="login-field-icon">
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+              </svg>
+            </span>
+            <input 
+              type="password" 
+              id="login-pass" 
+              name="password" 
+              placeholder="Digite sua senha" 
+              autocomplete="current-password" 
+              required
+            >
+            <button 
+              type="button" 
+              class="login-toggle-pass" 
+              id="btn-toggle-pass" 
+              title="Mostrar/Ocultar senha" 
+              aria-label="Mostrar/Ocultar senha"
+            >
+              <svg id="icon-eye" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                <circle cx="12" cy="12" r="3"></circle>
+              </svg>
+            </button>
+          </div>
+        </div>
+
+        <!-- Opções (Lembrar acesso) -->
+        <div class="login-row-options">
+          <label class="login-remember">
+            <input type="checkbox" id="login-remember" checked>
+            <span>Lembrar meu acesso neste dispositivo</span>
+          </label>
+        </div>
+
+        <!-- Botão Entrar -->
+        <button type="submit" class="login-submit-btn" id="login-btn">
+          <span id="btn-text">Entrar no Painel</span>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="5" y1="12" x2="19" y2="12"></line>
+            <polyline points="12 5 19 12 12 19"></polyline>
+          </svg>
+        </button>
+
+      </form>
+
+      <!-- Tag Discreta de Segurança -->
+      <div class="login-security-tag">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+          <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+        </svg>
+        <span>Acesso exclusivo e criptografado para Kleber Oliveira</span>
+      </div>
+
+      <!-- Voltar ao site do cliente -->
+      <div class="login-back-wrap">
+        <a href="index.html" class="login-back-link">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="19" y1="12" x2="5" y2="12"></line>
+            <polyline points="12 19 5 12 12 5"></polyline>
+          </svg>
+          Voltar ao site público
+        </a>
+      </div>
+
+    </div>
+  </main>
+
+  <script src="config.js?v=5"></script>
+  <script src="assets/js/supabase-client.js?v=5"></script>
+
+  <script>
+    // 1. Alternador de Tema Apple
+    const themeBtn = document.getElementById("theme-toggle");
+    function updateThemeIcon(theme) {
+      if (!themeBtn) return;
+      if (theme === "dark") {
+        themeBtn.innerHTML = `<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>`;
+        themeBtn.title = "Mudar para modo Off-white";
+      } else {
+        themeBtn.innerHTML = `<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>`;
+        themeBtn.title = "Mudar para modo escuro";
+      }
+    }
+    const currentTheme = document.documentElement.getAttribute("data-theme") || "light";
+    updateThemeIcon(currentTheme);
+
+    if (themeBtn) {
+      themeBtn.onclick = () => {
+        const active = document.documentElement.getAttribute("data-theme") || "light";
+        const next = active === "dark" ? "light" : "dark";
+        document.documentElement.setAttribute("data-theme", next);
+        localStorage.setItem("kgestao_theme", next);
+        updateThemeIcon(next);
+      };
+    }
+
+    // 2. Alternar visibilidade da senha
+    const passInput = document.getElementById("login-pass");
+    const togglePassBtn = document.getElementById("btn-toggle-pass");
+    const iconEye = document.getElementById("icon-eye");
+
+    if (togglePassBtn && passInput) {
+      togglePassBtn.onclick = () => {
+        const isPassword = passInput.type === "password";
+        passInput.type = isPassword ? "text" : "password";
+        if (isPassword) {
+          // Ícone Olho Cortado (Esconder)
+          iconEye.innerHTML = `<path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path><line x1="1" y1="1" x2="23" y2="23"></line>`;
+        } else {
+          // Ícone Olho Aberto (Mostrar)
+          iconEye.innerHTML = `<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle>`;
+        }
+      };
+    }
+
+    // 3. Submissão e Validação do Login
+    const loginForm = document.getElementById("login-form");
+    const loginUser = document.getElementById("login-user");
+    const loginRemember = document.getElementById("login-remember");
+    const loginBtn = document.getElementById("login-btn");
+    const btnText = document.getElementById("btn-text");
+    const loginError = document.getElementById("login-error");
+    const loginErrorText = document.getElementById("login-error-text");
+    const loginCard = document.getElementById("login-card");
+
+    function showError(msg) {
+      loginErrorText.textContent = msg || "Credenciais incorretas. Acesso restrito ao Diretor.";
+      loginError.classList.add("visible");
+      loginCard.classList.remove("shake");
+      void loginCard.offsetWidth; // Trigger reflow
+      loginCard.classList.add("shake");
+      passInput.value = "";
+      passInput.focus();
+    }
+
+    function clearError() {
+      loginError.classList.remove("visible");
+      loginCard.classList.remove("shake");
+    }
+
+    loginUser.addEventListener("input", clearError);
+    passInput.addEventListener("input", clearError);
+
+    loginForm.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      clearError();
+
+      const username = loginUser.value.trim();
+      const password = passInput.value;
+      const remember = loginRemember.checked;
+
+      if (!username) {
+        showError("Por favor, digite seu usuário ou e-mail.");
+        loginUser.focus();
+        return;
+      }
+
+      if (!password) {
+        showError("Por favor, digite sua senha de acesso.");
+        passInput.focus();
+        return;
+      }
+
+      loginBtn.disabled = true;
+      btnText.textContent = "Verificando acesso...";
+
+      try {
+        if (!window.KGestaoDB || !window.KGestaoDB.login) {
+          throw new Error("Sistema de autenticação não inicializado.");
+        }
+
+        await window.KGestaoDB.login(username, password, remember);
+
+        btnText.textContent = "Acesso autorizado! Redirecionando...";
+        setTimeout(() => {
+          window.location.replace("dashboard.html");
+        }, 300);
+
+      } catch (err) {
+        console.warn("Falha no login do diretor:", err);
+        showError(err.message || "Usuário ou senha incorretos.");
+        loginBtn.disabled = false;
+        btnText.textContent = "Entrar no Painel";
+      }
+    });
+  </script>
+</body>
+</html>

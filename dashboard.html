@@ -10,12 +10,19 @@
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='595 415 250 245'%3E%3Cpolygon fill='%23111111' points='600.16,485.66 600.16,570.57 665.38,485.66'/%3E%3Cpolygon fill='%23111111' points='600.16,655.47 665.38,570.57 600.16,570.57'/%3E%3Cpolygon fill='%23111111' points='774.25,422.05 665.38,570.57 708.85,570.57 774.09,655.47 839.31,655.47 773.99,570.57 730.61,570.57 839.31,422.05'/%3E%3C/svg%3E">
 
   <!-- Estilos -->
-  <link rel="stylesheet" href="assets/css/style.css">
+  <link rel="stylesheet" href="assets/css/style.css?v=6">
 
   <script>
     (function() {
+      // 1. Aplica o tema salvo imediatamente
       const savedTheme = localStorage.getItem("kgestao_theme") || "light";
       document.documentElement.setAttribute("data-theme", savedTheme);
+
+      // 2. Proteção de Acesso: Redireciona para o login se não for o Diretor autenticado
+      const session = sessionStorage.getItem("kgestao_director_session") || localStorage.getItem("kgestao_director_session");
+      if (!session) {
+        window.location.replace("login.html");
+      }
     })();
   </script>
 </head>
@@ -50,6 +57,16 @@
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
           Abrir Briefing do Cliente
         </a>
+
+        <!-- Botão Sair do Diretor -->
+        <button type="button" class="btn btn-secondary btn-sm" id="btn-logout" title="Sair do painel administrativo" style="display: inline-flex; align-items: center; gap: 6px;">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+            <polyline points="16 17 21 12 16 7"></polyline>
+            <line x1="21" y1="12" x2="9" y2="12"></line>
+          </svg>
+          Sair
+        </button>
       </div>
     </div>
   </header>
@@ -68,7 +85,7 @@
         <h1 style="font-size: 2.2rem; margin-top: 4px;">Briefings</h1>
       </div>
       <div style="font-size: 0.85rem; color: var(--tx-secondary);">
-        Direção Criativa: <strong style="color: var(--tx);">Kleber Oliveira</strong>
+        Direção Criativa: <strong style="color: var(--tx-primary);">Kleber Oliveira</strong>
       </div>
     </div>
 
@@ -187,11 +204,44 @@
     </div>
   </div>
 
+  <!-- Modal de Configuração do Banco Supabase -->
+  <div class="drawer-backdrop" id="modal-supabase" style="display: none; align-items: center; justify-content: center; z-index: 10000;">
+    <div style="background: var(--bg-card); border: 1px solid var(--border-card); border-radius: 20px; padding: 28px; width: 92%; max-width: 520px; box-shadow: var(--shadow-lg);">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+        <h3 style="font-family: var(--font-display); font-size: 1.2rem; font-weight: 700; color: var(--tx-primary);">Conectar Banco Supabase (Nuvem)</h3>
+        <button type="button" class="btn-icon" id="btn-close-supabase-modal" style="width: 32px; height: 32px; border-radius: 50%;">✕</button>
+      </div>
+      <p style="font-size: 0.85rem; color: var(--tx-secondary); margin-bottom: 20px; line-height: 1.5;">
+        Conecte seu banco Supabase para sincronizar briefings enviados por qualquer cliente em tempo real no seu painel.
+      </p>
+
+      <form id="form-supabase-config" onsubmit="return false;">
+        <div style="margin-bottom: 14px;">
+          <label style="display: block; font-size: 0.8rem; font-weight: 600; margin-bottom: 6px; color: var(--tx-primary);">URL do Projeto Supabase</label>
+          <input type="text" id="supabase-input-url" class="field-input" placeholder="https://exemplo.supabase.co" style="width: 100%;">
+        </div>
+        <div style="margin-bottom: 20px;">
+          <label style="display: block; font-size: 0.8rem; font-weight: 600; margin-bottom: 6px; color: var(--tx-primary);">Chave Pública (anon key)</label>
+          <input type="text" id="supabase-input-key" class="field-input" placeholder="eyJhbGciOiJIUzI1NiIsIn..." style="width: 100%;">
+        </div>
+
+        <div style="display: flex; gap: 10px; justify-content: space-between; align-items: center; flex-wrap: wrap;">
+          <button type="button" class="btn btn-ghost btn-sm" id="btn-disconnect-supabase" style="color: #ef4444; display: none;">Desconectar</button>
+          <div style="display: flex; gap: 10px; margin-left: auto;">
+            <button type="button" class="btn btn-secondary" id="btn-cancel-supabase">Cancelar</button>
+            <button type="button" class="btn btn-primary" id="btn-save-supabase">Salvar e Conectar</button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+
   <!-- Scripts -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="config.js"></script>
-  <script src="assets/js/supabase-client.js"></script>
-  <script src="assets/js/dashboard.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+  <script src="config.js?v=5"></script>
+  <script src="assets/js/supabase-client.js?v=5"></script>
+  <script src="assets/js/dashboard.js?v=5"></script>
 
   <!-- Script do alternador de tema -->
   <script>
