@@ -35,12 +35,21 @@
       footer_btn_email: "Enviar E-mail",
       footer_copy: "© 2026 Kleber Oliveira • KGestão de Marcas",
       back_to_home: "Voltar ao Início",
-      briefing_welcome_title: "Responder Briefing de Identidade Visual",
+      briefing_welcome_title: "Formulário de Identidade Visual & Logo",
       briefing_welcome_desc: "Para desenvolvermos uma identidade com posicionamento de alto valor, precisamos compreender a fundo a essência do seu negócio, seus diferenciais competitivos e a ambição da sua marca.",
       briefing_duration: "Duração: <strong>~5 minutos</strong>",
       briefing_saving: "Salvamento: <strong>Automático no celular</strong>",
       briefing_analysis: "Análise Direta: <strong>Kleber Oliveira</strong>",
-      briefing_btn_start: "Responder Briefing"
+      briefing_btn_start: "Responder Briefing",
+      briefing_page_title: "Formulário de IDV & Logo",
+      briefing_pill_time: "~5 minutos",
+      briefing_pill_save: "Salvo automaticamente",
+      briefing_pill_director: "Direção: Kleber Oliveira",
+      briefing_btn_back_home: "Voltar ao Início",
+      briefing_btn_back: "Voltar",
+      briefing_btn_next: "Continuar",
+      briefing_btn_review: "Revisar Respostas",
+      briefing_autosave_text: "Salvo no navegador"
     },
     en: {
       status_available: "Available for new projects",
@@ -68,12 +77,21 @@
       footer_btn_email: "Send Email",
       footer_copy: "© 2026 Kleber Oliveira • KGestão de Marcas",
       back_to_home: "Back to Home",
-      briefing_welcome_title: "Complete Brand Identity Briefing",
+      briefing_welcome_title: "Brand Identity & Logo Form",
       briefing_welcome_desc: "To develop an identity with high-value positioning, we need to deeply understand the essence of your business, competitive advantages, and brand ambition.",
       briefing_duration: "Duration: <strong>~5 minutes</strong>",
       briefing_saving: "Saving: <strong>Automatic on phone</strong>",
       briefing_analysis: "Direct Review: <strong>Kleber Oliveira</strong>",
-      briefing_btn_start: "Start Briefing"
+      briefing_btn_start: "Start Briefing",
+      briefing_page_title: "Brand Identity & Logo Form",
+      briefing_pill_time: "~5 minutes",
+      briefing_pill_save: "Auto-saved",
+      briefing_pill_director: "Direction: Kleber Oliveira",
+      briefing_btn_back_home: "Back to Home",
+      briefing_btn_back: "Back",
+      briefing_btn_next: "Continue",
+      briefing_btn_review: "Review Answers",
+      briefing_autosave_text: "Saved in browser"
     }
   };
 

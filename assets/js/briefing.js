@@ -164,7 +164,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   ];
 
-  let currentStep = -1; // -1: Boas-vindas, 0 a 4: Etapas, 5: Revisão, 6: Sucesso
+  let currentStep = 0; // Inicia direto na Etapa 01 do Formulário (0 a 4: Etapas, 5: Revisão, 6: Sucesso)
   let formData = {};
 
   try {
@@ -321,10 +321,25 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     appEl.innerHTML = `
+      <div class="briefing-info-pills">
+        <div class="info-pill">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+          <span data-i18n="briefing_pill_time">~5 minutos</span>
+        </div>
+        <div class="info-pill">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path><polyline points="17 21 17 13 7 13 7 21"></polyline></svg>
+          <span data-i18n="briefing_pill_save">Salvo automaticamente</span>
+        </div>
+        <div class="info-pill">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+          <span data-i18n="briefing_pill_director">Direção: Kleber Oliveira</span>
+        </div>
+      </div>
+
       <div class="stage-progress-bar">
         <div class="stage-meta">
-          <span>${step.number} — ${step.section}</span>
-          <span>Etapa ${idx + 1} de ${STEPS.length}</span>
+          <span class="stage-meta-step">${step.number} — ${step.section}</span>
+          <span class="stage-meta-count">Etapa ${idx + 1} de ${STEPS.length}</span>
         </div>
         <div class="stage-pill-track">
           <div class="stage-pill-fill" style="width: ${progressPercent}%;"></div>
@@ -333,8 +348,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
       <div class="stage-content">
         <div class="stage-header">
-          <div class="stage-number">${step.number} / 05</div>
-          <h2 class="stage-title">${step.title}</h2>
+          <div class="stage-number">${step.number} / 05 • KGESTÃO DE MARCAS</div>
+          <h1 class="stage-title">${step.title}</h1>
           <p class="stage-subtitle">${step.desc}</p>
         </div>
 
@@ -344,15 +359,15 @@ document.addEventListener("DOMContentLoaded", () => {
           <div class="stage-actions">
             <button type="button" class="btn btn-secondary" id="btn-prev">
               <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
-              Voltar
+              <span>${idx === 0 ? 'Voltar ao Início' : 'Voltar'}</span>
             </button>
 
             <div class="autosave-status" id="autosave-indicator">
-              <span class="dot"></span> Salvo no navegador
+              <span class="dot"></span> <span>Salvo no navegador</span>
             </div>
 
             <button type="button" class="btn btn-primary" id="btn-next">
-              ${idx === STEPS.length - 1 ? 'Revisar Respostas' : 'Continuar'}
+              <span>${idx === STEPS.length - 1 ? 'Revisar Respostas' : 'Continuar'}</span>
               <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
             </button>
           </div>
@@ -410,6 +425,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
     document.getElementById("btn-prev").onclick = () => {
       collectStepData(idx);
+      if (idx === 0) {
+        window.location.href = "index.html";
+        return;
+      }
       currentStep--;
       render();
     };
@@ -421,6 +440,10 @@ document.addEventListener("DOMContentLoaded", () => {
         render();
       }
     };
+
+    if (window.setLanguage && window.getCurrentLang) {
+      window.setLanguage(window.getCurrentLang());
+    }
   }
 
   function collectStepData(idx) {
