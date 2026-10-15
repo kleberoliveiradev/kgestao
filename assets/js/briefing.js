@@ -24,7 +24,7 @@ document.addEventListener("DOMContentLoaded", () => {
       fields: [
         { id: "nome", label: "Seu nome completo", type: "text", required: true, placeholder: "Como devemos te chamar?" },
         { id: "empresa", label: "Nome da marca ou empresa", type: "text", required: false, placeholder: "Ex: Aura Joias, Café Origem..." },
-        { id: "contato", label: "WhatsApp ou e-mail principal", type: "text", required: true, placeholder: "(11) 99999-9999 ou seu@email.com", helper: "Usaremos este contato para envio da proposta e contato direto." },
+        { id: "contato", label: "WhatsApp (com DDD)", type: "tel", required: true, placeholder: "(11) 99999-9999", helper: "Usaremos seu WhatsApp para envio da proposta e contato direto." },
         { id: "site", label: "Instagram ou site atual (se houver)", type: "text", required: false, placeholder: "@suamarca ou www.seusite.com.br" }
       ]
     },
@@ -275,9 +275,9 @@ document.addEventListener("DOMContentLoaded", () => {
           </label>
       `;
 
-      if (field.type === "text") {
+      if (field.type === "text" || field.type === "tel") {
         fieldsHtml += `
-          <input type="text" class="field-input" id="fld-${field.id}" placeholder="${field.placeholder || ''}" value="${escapeHtml(val)}">
+          <input type="${field.type}" inputmode="${field.type === 'tel' ? 'tel' : 'text'}" class="field-input" id="fld-${field.id}" placeholder="${field.placeholder || ''}" value="${escapeHtml(val)}">
         `;
       } else if (field.type === "area") {
         fieldsHtml += `
@@ -412,6 +412,19 @@ document.addEventListener("DOMContentLoaded", () => {
         const inputEl = document.getElementById(`fld-${f.id}`);
         if (inputEl) {
           inputEl.addEventListener("input", () => {
+            if (f.id === "contato") {
+              let clean = inputEl.value.replace(/\D/g, "");
+              if (clean.length > 11) clean = clean.slice(0, 11);
+              if (clean.length > 10) {
+                inputEl.value = `(${clean.slice(0, 2)}) ${clean.slice(2, 7)}-${clean.slice(7)}`;
+              } else if (clean.length > 6) {
+                inputEl.value = `(${clean.slice(0, 2)}) ${clean.slice(2, 6)}-${clean.slice(6)}`;
+              } else if (clean.length > 2) {
+                inputEl.value = `(${clean.slice(0, 2)}) ${clean.slice(2)}`;
+              } else if (clean.length > 0) {
+                inputEl.value = `(${clean}`;
+              }
+            }
             formData[f.id] = inputEl.value;
             saveDraft();
             const errEl = document.getElementById(`err-${f.id}`);
@@ -469,7 +482,23 @@ document.addEventListener("DOMContentLoaded", () => {
         const errEl = document.getElementById(`err-${f.id}`);
         if (isEmpty) {
           isValid = false;
-          if (errEl) errEl.classList.add("active");
+          if (errEl) {
+            errEl.textContent = f.id === "contato"
+              ? "Por favor, informe seu WhatsApp com DDD para continuar."
+              : "Por favor, preencha este campo para continuar.";
+            errEl.classList.add("active");
+          }
+        } else if (f.id === "contato") {
+          const digits = String(val).replace(/\D/g, "");
+          if (digits.length < 10) {
+            isValid = false;
+            if (errEl) {
+              errEl.textContent = "Por favor, informe um WhatsApp válido com DDD (mínimo 10 dígitos).";
+              errEl.classList.add("active");
+            }
+          } else {
+            if (errEl) errEl.classList.remove("active");
+          }
         } else {
           if (errEl) errEl.classList.remove("active");
         }

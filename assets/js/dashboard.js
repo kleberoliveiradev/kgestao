@@ -350,7 +350,7 @@ document.addEventListener("DOMContentLoaded", async () => {
           <div class="detail-value">${escapeHtml(b.empresa || 'Não informado')}</div>
         </div>
         <div class="detail-row">
-          <div class="detail-label">Contato (WhatsApp / E-mail)</div>
+          <div class="detail-label">Contato (WhatsApp)</div>
           <div class="detail-value"><strong>${escapeHtml(b.contato)}</strong></div>
         </div>
         <div class="detail-row">
