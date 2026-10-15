@@ -1,0 +1,14 @@
+# Temporary files and scratch scripts
+scratch/
+*.log
+cookies.txt
+
+# OS metadata
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# IDE & local state
+.vscode/
+.idea/
+*.tmp

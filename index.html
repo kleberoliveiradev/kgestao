@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="pt-BR" data-theme="light">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Kleber Oliveira | Designer & KGestão de Marcas</title>
+  <meta name="description" content="Designer gráfico e diretor criativo de marcas. Especialista em identidade visual, rebranding e design estratégico de alto valor.">
+
+  <!-- Favicon / Monograma K Oficial (Preto) -->
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='595 415 250 245'%3E%3Cpolygon fill='%23111111' points='600.16,485.66 600.16,570.57 665.38,485.66'/%3E%3Cpolygon fill='%23111111' points='600.16,655.47 665.38,570.57 600.16,570.57'/%3E%3Cpolygon fill='%23111111' points='774.25,422.05 665.38,570.57 708.85,570.57 774.09,655.47 839.31,655.47 773.99,570.57 730.61,570.57 839.31,422.05'/%3E%3C/svg%3E">
+
+  <!-- Google Fonts: Inter + Plus Jakarta Sans -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- Estilos -->
+  <link rel="stylesheet" href="assets/css/style.css">
+
+  <script>
+    // Recupera tema do localStorage (Padrão: light / Off-white)
+    (function() {
+      const savedTheme = localStorage.getItem("kgestao_theme") || "light";
+      document.documentElement.setAttribute("data-theme", savedTheme);
+    })();
+  </script>
+</head>
+<body>
+
+  <!-- 1. Topbar (Logo Oficial KGestão + Seletor de Idioma com Bandeiras + Tema) -->
+  <header class="portal-header">
+    <a href="index.html" class="header-logo" title="KGestão de Marcas">
+      <!-- Marca Oficial em Off-white (logo-01.svg) -->
+      <img src="logo/logo-oficial/logo-01.svg" alt="KGestão de Marcas" class="header-logo-img logo-light">
+      <!-- Marca Oficial em Dark Mode (logo-02.svg) -->
+      <img src="logo/logo-oficial/logo-02.svg" alt="KGestão de Marcas" class="header-logo-img logo-dark">
+    </a>
+
+    <div class="top-controls">
+      <!-- Seletor de Idioma em Cápsula com Bandeiras (Idêntico ao Print) -->
+      <div class="lang-capsule" role="group" aria-label="Seletor de idioma">
+        <button type="button" class="lang-capsule-btn active" id="lang-pt" title="Português">
+          <span class="flag-badge">
+            <svg class="flag-icon" viewBox="0 0 20 14" width="18" height="13" aria-hidden="true">
+              <rect width="20" height="14" rx="2.5" fill="#009c3b"/>
+              <polygon points="10,1.8 18.2,7 10,12.2 1.8,7" fill="#ffdf00"/>
+              <circle cx="10" cy="7" r="3.2" fill="#002776"/>
+              <path d="M 7.1 7.4 A 3.2 3.2 0 0 0 13.0 6.2" stroke="#ffffff" stroke-width="0.75" fill="none" stroke-linecap="round"/>
+            </svg>
+          </span>
+          <span>PT</span>
+        </button>
+        <button type="button" class="lang-capsule-btn" id="lang-en" title="English">
+          <span class="flag-badge">
+            <svg class="flag-icon" viewBox="0 0 20 14" width="18" height="13" aria-hidden="true">
+              <clipPath id="us-clip-index"><rect width="20" height="14" rx="2.5"/></clipPath>
+              <g clip-path="url(#us-clip-index)">
+                <rect width="20" height="14" fill="#ffffff"/>
+                <rect y="0" width="20" height="1.08" fill="#bf0a30"/>
+                <rect y="2.15" width="20" height="1.08" fill="#bf0a30"/>
+                <rect y="4.31" width="20" height="1.08" fill="#bf0a30"/>
+                <rect y="6.46" width="20" height="1.08" fill="#bf0a30"/>
+                <rect y="8.62" width="20" height="1.08" fill="#bf0a30"/>
+                <rect y="10.77" width="20" height="1.08" fill="#bf0a30"/>
+                <rect y="12.92" width="20" height="1.08" fill="#bf0a30"/>
+                <rect width="9" height="7.54" fill="#002868"/>
+                <circle cx="2" cy="1.6" r="0.6" fill="#ffffff"/>
+                <circle cx="4.5" cy="1.6" r="0.6" fill="#ffffff"/>
+                <circle cx="7" cy="1.6" r="0.6" fill="#ffffff"/>
+                <circle cx="3.25" cy="3.2" r="0.6" fill="#ffffff"/>
+                <circle cx="5.75" cy="3.2" r="0.6" fill="#ffffff"/>
+                <circle cx="2" cy="4.8" r="0.6" fill="#ffffff"/>
+                <circle cx="4.5" cy="4.8" r="0.6" fill="#ffffff"/>
+                <circle cx="7" cy="4.8" r="0.6" fill="#ffffff"/>
+                <circle cx="3.25" cy="6.4" r="0.6" fill="#ffffff"/>
+                <circle cx="5.75" cy="6.4" r="0.6" fill="#ffffff"/>
+              </g>
+            </svg>
+          </span>
+          <span>EN</span>
+        </button>
+      </div>
+
+      <!-- Alternador de Tema -->
+      <button class="btn-icon-top" id="theme-toggle" title="Alternar tema claro/escuro" aria-label="Alternar tema">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="5"></circle>
+          <line x1="12" y1="1" x2="12" y2="3"></line>
+          <line x1="12" y1="21" x2="12" y2="23"></line>
+          <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+          <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+          <line x1="1" y1="12" x2="3" y2="12"></line>
+          <line x1="21" y1="12" x2="23" y2="12"></line>
+          <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+          <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+        </svg>
+      </button>
+    </div>
+  </header>
+
+  <!-- 2. Hero Profile (Foto Oficial do Instagram, Status, Nome e Redes) -->
+  <section class="hero-profile">
+    <!-- Foto Oficial do Perfil com Anel de Stories do Instagram -->
+    <a href="https://www.instagram.com/kgestaodemarcas/" target="_blank" rel="noopener" class="avatar-ring-wrap" title="Ver Stories no Instagram (@kgestaodemarcas)" aria-label="Ver Stories no Instagram">
+      <img src="assets/img/profile-instagram.jpg" alt="K - Gestão de Marcas" class="avatar-img" onerror="this.src='logo/identidade-visual/04.jpg'">
+    </a>
+
+    <!-- Pílula de Status Pulsante -->
+    <div class="status-pill" title="Status: Disponível para novos projetos">
+      <span class="status-dot-pulse" aria-hidden="true"></span>
+      <span data-i18n="status_available">Disponível para novos projetos</span>
+    </div>
+
+    <!-- Título Principal com Separador | -->
+    <h1 class="hero-name-title">
+      <span data-i18n="hero_title">Kleber Oliveira</span> <span class="divider">|</span> <span data-i18n="hero_role">Designer</span>
+    </h1>
+
+    <!-- Handle Oficial do Instagram com Efeito de Brilho Dinâmico -->
+    <a href="https://www.instagram.com/kgestaodemarcas/" target="_blank" rel="noopener" class="hero-handle" id="hero-handle" title="Instagram @kgestaodemarcas">
+      @kgestaodemarcas
+    </a>
+
+    <!-- Biografia -->
+    <p class="hero-bio" data-i18n="hero_bio">
+      Designer gráfico e diretor criativo há 8 anos, especialista em identidade visual, rebranding e posicionamento estratégico de alto valor. Fundador da KGestão de Marcas.
+    </p>
+
+    <!-- Linha de Ícones Sociais Interativos Coloridos por Marca -->
+    <div class="social-icons-row">
+      <!-- Instagram Oficial (@kgestaodemarcas) -->
+      <a href="https://www.instagram.com/kgestaodemarcas/" target="_blank" rel="noopener" class="social-btn social-instagram" title="Instagram • @kgestaodemarcas" aria-label="Instagram">
+        <svg class="social-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
+          <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
+          <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
+        </svg>
+      </a>
+
+      <!-- WhatsApp Oficial -->
+      <a href="https://wa.me/5511983467706" target="_blank" rel="noopener" class="social-btn social-whatsapp" title="WhatsApp • Fale Conosco" aria-label="WhatsApp">
+        <svg class="social-icon" width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.414z"/>
+        </svg>
+      </a>
+
+      <!-- Behance Oficial -->
+      <a href="https://www.behance.net/kleberoliveirapsd" target="_blank" rel="noopener" class="social-btn social-behance" title="Behance • @kleberoliveirapsd" aria-label="Behance">
+        <svg class="social-icon" width="20" height="20" viewBox="0 0 31.492 31.492" fill="currentColor">
+          <path d="M12.033,16.98c-0.382-0.176-0.919-0.264-1.608-0.272H6.97V21h3.4c0.699,0,1.24-0.092,1.631-0.283 c0.703-0.35,1.057-1.019,1.057-2.01C13.058,17.87,12.717,17.293,12.033,16.98z"/>
+          <path d="M12.077,13.645c0.435-0.265,0.651-0.736,0.651-1.415c0-0.749-0.286-1.246-0.863-1.485c-0.496-0.165-1.131-0.251-1.9-0.251 H6.97v3.551h3.405C11.074,14.044,11.641,13.911,12.077,13.645z"/>
+          <path d="M22.516,13.941c-0.775,0-1.375,0.224-1.801,0.661c-0.427,0.439-0.693,1.033-0.803,1.785h5.195 c-0.059-0.799-0.326-1.407-0.808-1.82C23.822,14.15,23.227,13.941,22.516,13.941z"/>
+          <path d="M0,0v31.492h31.492V0H0z M19.249,8.366h6.481v1.61h-6.481V8.366z M15.734,21.504c-0.306,0.502-0.685,0.924-1.14,1.266 c-0.513,0.394-1.119,0.664-1.816,0.808c-0.699,0.146-1.457,0.218-2.271,0.218H3.256V7.7h7.775 c1.958,0.029,3.348,0.597,4.168,1.714c0.493,0.685,0.736,1.504,0.736,2.456c0,0.987-0.247,1.773-0.745,2.37 c-0.275,0.337-0.684,0.641-1.225,0.916c0.819,0.302,1.44,0.771,1.855,1.423c0.418,0.646,0.627,1.435,0.627,2.356 C16.448,19.891,16.214,20.748,15.734,21.504z M28.234,18.377h-8.396c0.047,1.159,0.446,1.969,1.206,2.434 c0.457,0.291,1.012,0.432,1.661,0.432c0.687,0,1.241-0.173,1.673-0.527c0.234-0.188,0.439-0.455,0.618-0.791h3.077 c-0.08,0.685-0.45,1.377-1.117,2.084c-1.03,1.121-2.477,1.684-4.335,1.684c-1.536,0-2.888-0.477-4.062-1.42 c-1.17-0.946-1.76-2.485-1.76-4.618c0-1.999,0.528-3.531,1.587-4.597c1.063-1.066,2.435-1.598,4.125-1.598 c1.003,0,1.905,0.179,2.712,0.537c0.803,0.362,1.467,0.93,1.988,1.708c0.475,0.687,0.777,1.48,0.921,2.387 C28.214,16.615,28.249,17.379,28.234,18.377z"/>
+        </svg>
+      </a>
+    </div>
+  </section>
+
+  <!-- 3. Card de Destaque com Degradê do Rosa Oficial da Foto de Perfil (#FE016E) -->
+  <section class="main-cta-card">
+    <a href="https://wa.me/5511983467706?text=Ol%C3%A1%2C%20Kleber!%20Gostaria%20de%20solicitar%20um%20or%C3%A7amento." target="_blank" rel="noopener" class="cta-banner" title="Solicitar Orçamento no WhatsApp">
+      <div class="cta-left">
+        <div class="cta-icon-box">
+          <!-- Monograma Branco K -->
+          <svg viewBox="595 415 250 245" width="28" height="28" style="color: #ffffff;">
+            <polygon fill="currentColor" points="600.16,485.66 600.16,570.57 665.38,485.66"/>
+            <polygon fill="currentColor" points="600.16,655.47 665.38,570.57 600.16,570.57"/>
+            <polygon fill="currentColor" points="774.25,422.05 665.38,570.57 708.85,570.57 774.09,655.47 839.31,655.47 773.99,570.57 730.61,570.57 839.31,422.05"/>
+          </svg>
+        </div>
+        <div class="cta-text-wrap">
+          <div class="cta-title" data-i18n="cta_title">Solicitar Orçamento</div>
+          <div class="cta-subtitle" data-i18n="cta_subtitle">Sites, Páginas de vendas, Logotipos, Identidades Visuais e criativos.</div>
+        </div>
+      </div>
+      <div class="cta-arrow-btn">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="7" y1="17" x2="17" y2="7"></line><polyline points="7 7 17 7 17 17"></polyline></svg>
+      </div>
+    </a>
+  </section>
+
+  <!-- 4. Cards Numerados de Acesso Rápido (01, 02, 03) -->
+  <section class="numbered-cards-group">
+    <!-- Card 01: Site K-Gestão de Marcas -->
+    <a href="https://kgestao.com.br" target="_blank" rel="noopener" class="numbered-item-card" title="Site K-Gestão de Marcas">
+      <div class="numbered-left">
+        <div class="number-square">01</div>
+        <div class="numbered-content">
+          <div class="numbered-title" data-i18n="card1_title">Site K-Gestão de Marcas</div>
+          <div class="numbered-desc" data-i18n="card1_desc">Conheça nossas soluções completas de branding e posicionamento.</div>
+        </div>
+      </div>
+      <div class="arrow-icon-square">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="7" y1="17" x2="17" y2="7"></line><polyline points="7 7 17 7 17 17"></polyline></svg>
+      </div>
+    </a>
+
+    <!-- Card 02: Portfólio Completo -->
+    <a href="https://www.behance.net/kleberoliveirapsd" target="_blank" rel="noopener" class="numbered-item-card" title="Portfólio Completo">
+      <div class="numbered-left">
+        <div class="number-square">02</div>
+        <div class="numbered-content">
+          <div class="numbered-title" data-i18n="card2_title">Portfólio Completo</div>
+          <div class="numbered-desc" data-i18n="card2_desc">Últimos projetos publicados no Behance, identidades e 3D.</div>
+        </div>
+      </div>
+      <div class="arrow-icon-square">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="7" y1="17" x2="17" y2="7"></line><polyline points="7 7 17 7 17 17"></polyline></svg>
+      </div>
+    </a>
+
+    <!-- Card 03: Formulário de IDV/Logo -->
+    <a href="briefing.html" class="numbered-item-card" title="Formulário de IDV/Logo">
+      <div class="numbered-left">
+        <div class="number-square">03</div>
+        <div class="numbered-content">
+          <div class="numbered-title" data-i18n="card3_title">Formulário de IDV/Logo</div>
+          <div class="numbered-desc" data-i18n="card3_desc">Preencha em 5 etapas rápidas e receba proposta personalizada.</div>
+        </div>
+      </div>
+      <div class="arrow-icon-square">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="7" y1="17" x2="17" y2="7"></line><polyline points="7 7 17 7 17 17"></polyline></svg>
+      </div>
+    </a>
+  </section>
+
+  <!-- 5. Seção de Portfólio com Sincronização Automática do Behance -->
+  <section class="portfolio-section" id="portfolio-section">
+    <div class="section-head-line">
+      <div class="section-head-left">
+        <h2 class="section-head-title" data-i18n="portfolio_title">Portfólio</h2>
+        <p class="section-head-subtitle" data-i18n="portfolio_subtitle">Projetos selecionados de branding, interfaces e posicionamento estratégico.</p>
+      </div>
+      <div class="section-head-right">
+        <span class="section-counter" id="carousel-counter"><span class="counter-curr">01</span> <span class="counter-div">/</span> <span class="counter-tot">03</span></span>
+        <div class="carousel-nav-arrows">
+          <button type="button" class="carousel-arrow-btn" id="carousel-prev" title="Projeto anterior" aria-label="Anterior">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+          </button>
+          <button type="button" class="carousel-arrow-btn" id="carousel-next" title="Próximo projeto" aria-label="Próximo">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Carrossel Arrastável Horizontal -->
+    <div class="portfolio-carousel-wrapper">
+      <div class="showcase-cards-list" id="portfolio-carousel">
+        <!-- Card 1: SophChat • AI -->
+        <article class="showcase-item-card">
+          <a href="https://www.behance.net/gallery/253025285/SophChat-AI" target="_blank" rel="noopener" class="showcase-img-wrap" title="Ver SophChat • AI">
+            <img src="assets/img/project-sophchat.png?v=3" alt="SophChat • AI" class="showcase-img">
+          </a>
+          <div class="showcase-info-bar">
+            <div class="showcase-title-box">
+              <span class="showcase-proj-name">SophChat • AI</span>
+              <span class="showcase-proj-desc">Design de produto, inteligência artificial e interface conversacional</span>
+            </div>
+            <a href="https://www.behance.net/gallery/253025285/SophChat-AI" target="_blank" rel="noopener" class="showcase-action-btn-pink" title="Ver projeto">
+              <span data-i18n="portfolio_view_project">Ver projeto</span>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+            </a>
+          </div>
+        </article>
+
+        <!-- Card 2: Branding • LTX Academy -->
+        <article class="showcase-item-card">
+          <a href="https://www.behance.net/gallery/217478407/Branding-LTX-Academy" target="_blank" rel="noopener" class="showcase-img-wrap" title="Ver Branding • LTX Academy">
+            <img src="assets/img/project-ltx.png?v=3" alt="Branding • LTX Academy" class="showcase-img">
+          </a>
+          <div class="showcase-info-bar">
+            <div class="showcase-title-box">
+              <span class="showcase-proj-name">Branding • LTX Academy</span>
+              <span class="showcase-proj-desc">Identidade visual corporativa, tipografia suíça e ecossistema financeiro</span>
+            </div>
+            <a href="https://www.behance.net/gallery/217478407/Branding-LTX-Academy" target="_blank" rel="noopener" class="showcase-action-btn-pink" title="Ver projeto">
+              <span data-i18n="portfolio_view_project">Ver projeto</span>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+            </a>
+          </div>
+        </article>
+
+        <!-- Card 3: CRMax • Brand & Posicionamento -->
+        <article class="showcase-item-card">
+          <a href="https://www.behance.net/gallery/240446989/CRMax-Brand" target="_blank" rel="noopener" class="showcase-img-wrap" title="Ver CRMax • Brand">
+            <img src="assets/img/project-crmax.png?v=3" alt="CRMax • Brand & Posicionamento" class="showcase-img">
+          </a>
+          <div class="showcase-info-bar">
+            <div class="showcase-title-box">
+              <span class="showcase-proj-name">CRMax • Brand & Posicionamento</span>
+              <span class="showcase-proj-desc">Posicionamento de alto valor, design minimalista e identidade de marca</span>
+            </div>
+            <a href="https://www.behance.net/gallery/240446989/CRMax-Brand" target="_blank" rel="noopener" class="showcase-action-btn-pink" title="Ver projeto">
+              <span data-i18n="portfolio_view_project">Ver projeto</span>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+            </a>
+          </div>
+        </article>
+      </div>
+    </div>
+
+    <!-- Indicadores de Pontos (Dots de Paginação) -->
+    <div class="carousel-dots-wrap" id="carousel-dots">
+      <button class="carousel-dot active" data-index="0" aria-label="Slide 1"></button>
+      <button class="carousel-dot" data-index="1" aria-label="Slide 2"></button>
+      <button class="carousel-dot" data-index="2" aria-label="Slide 3"></button>
+    </div>
+
+    <!-- Botão Destacado: Ver Portfólio Completo -->
+    <div class="portfolio-full-action">
+      <a href="https://www.behance.net/kleberoliveirapsd" target="_blank" rel="noopener" class="btn-full-portfolio" id="btn-full-portfolio" title="Ver portfólio completo">
+        <span data-i18n="portfolio_view_all">Ver Portfólio Completo</span>
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="5" y1="12" x2="19" y2="12"></line>
+          <polyline points="12 5 19 12 12 19"></polyline>
+        </svg>
+      </a>
+    </div>
+  </section>
+
+  <!-- 6. Footer Card -->
+  <footer class="portal-footer">
+    <div class="footer-glass-box">
+      <div class="footer-top-row">
+        <div class="footer-logo-lockup">
+          <img src="logo/logo-oficial/logo-01.svg" alt="KGestão de Marcas" class="header-logo-img logo-light" style="height: 32px;">
+          <img src="logo/logo-oficial/logo-02.svg" alt="KGestão de Marcas" class="header-logo-img logo-dark" style="height: 32px;">
+        </div>
+      </div>
+      <p class="footer-tagline" data-i18n="footer_tagline">
+        Estúdio de branding, design e posicionamento estratégico para marcas que desejam cobrar mais e dominar seu mercado.
+      </p>
+      <div class="footer-action-pills">
+        <a href="https://wa.me/5511983467706" target="_blank" rel="noopener" class="footer-pill-btn">
+          <span data-i18n="footer_btn_wa">Chamar no WhatsApp</span>
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+        </a>
+        <a href="mailto:contato@kgestao.com.br" class="footer-pill-btn">
+          <span data-i18n="footer_btn_email">Enviar E-mail</span>
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+        </a>
+      </div>
+      <div class="footer-bottom-info">
+        <span data-i18n="footer_copy">© 2026 Kleber Oliveira • KGestão de Marcas</span>
+        <div class="footer-bottom-right">
+          <span class="footer-motto">“A fé na vitória tem que ser inabalável”</span>
+          <a href="dashboard.html" class="footer-painel-btn" title="Área do Diretor (Dashboard)">Painel</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="config.js"></script>
+  <script src="assets/js/i18n.js"></script>
+  <script src="assets/js/behance-sync.js"></script>
+
+  <!-- Lógica de Alternância de Tema e Efeito de Brilho Dinâmico -->
+  <script>
+    // 1. Tema Claro (Off-white) / Escuro (Preto Neutro)
+    const themeBtn = document.getElementById("theme-toggle");
+    function syncThemeToggleIcon(theme) {
+      if (!themeBtn) return;
+      if (theme === "dark") {
+        themeBtn.innerHTML = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>`;
+        themeBtn.title = "Mudar para modo Off-white";
+        themeBtn.setAttribute("aria-label", "Mudar para modo Off-white");
+      } else {
+        themeBtn.innerHTML = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>`;
+        themeBtn.title = "Mudar para modo escuro";
+        themeBtn.setAttribute("aria-label", "Mudar para modo escuro");
+      }
+    }
+
+    if (themeBtn) {
+      syncThemeToggleIcon(document.documentElement.getAttribute("data-theme") || "light");
+      themeBtn.onclick = () => {
+        const cur = document.documentElement.getAttribute("data-theme") || "light";
+        const next = cur === "dark" ? "light" : "dark";
+        document.documentElement.setAttribute("data-theme", next);
+        localStorage.setItem("kgestao_theme", next);
+        syncThemeToggleIcon(next);
+      };
+    }
+
+    // 2. Efeito de Brilho que acompanha o Mouse em @kgestaodemarcas
+    (function initHandleMouseGlow() {
+      const handle = document.getElementById("hero-handle") || document.querySelector(".hero-handle");
+      if (!handle) return;
+
+      let rafId = null;
+      function setCoords(clientX, clientY) {
+        if (rafId) cancelAnimationFrame(rafId);
+        rafId = requestAnimationFrame(() => {
+          const rect = handle.getBoundingClientRect();
+          const x = clientX - rect.left;
+          const y = clientY - rect.top;
+          handle.style.setProperty("--mouse-x", `${x}px`);
+          handle.style.setProperty("--mouse-y", `${y}px`);
+        });
+      }
+
+      handle.addEventListener("mousemove", (e) => {
+        setCoords(e.clientX, e.clientY);
+      });
+
+      handle.addEventListener("mouseleave", () => {
+        if (rafId) cancelAnimationFrame(rafId);
+        handle.style.setProperty("--mouse-x", "-999px");
+        handle.style.setProperty("--mouse-y", "-999px");
+      });
+
+      handle.addEventListener("touchmove", (e) => {
+        if (e.touches && e.touches[0]) {
+          setCoords(e.touches[0].clientX, e.touches[0].clientY);
+        }
+      }, { passive: true });
+
+      handle.addEventListener("touchend", () => {
+        if (rafId) cancelAnimationFrame(rafId);
+        handle.style.setProperty("--mouse-x", "-999px");
+        handle.style.setProperty("--mouse-y", "-999px");
+      });
+    })();
+  </script>
+</body>
+</html>

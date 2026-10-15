@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="pt-BR" data-theme="light">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Dashboard do Diretor | KGestão de Marcas</title>
+  <meta name="description" content="Painel executivo estilo Apple para gestão de briefings e projetos da KGestão de Marcas.">
+
+  <!-- Favicon / Monograma K Oficial (Preto) -->
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='595 415 250 245'%3E%3Cpolygon fill='%23111111' points='600.16,485.66 600.16,570.57 665.38,485.66'/%3E%3Cpolygon fill='%23111111' points='600.16,655.47 665.38,570.57 600.16,570.57'/%3E%3Cpolygon fill='%23111111' points='774.25,422.05 665.38,570.57 708.85,570.57 774.09,655.47 839.31,655.47 773.99,570.57 730.61,570.57 839.31,422.05'/%3E%3C/svg%3E">
+
+  <!-- Estilos -->
+  <link rel="stylesheet" href="assets/css/style.css">
+
+  <script>
+    (function() {
+      const savedTheme = localStorage.getItem("kgestao_theme") || "light";
+      document.documentElement.setAttribute("data-theme", savedTheme);
+    })();
+  </script>
+</head>
+<body>
+
+  <!-- Topbar Apple Glassmorphism -->
+  <header class="site-header">
+    <div class="header-container">
+      <a href="dashboard.html" class="header-logo">
+        <img src="logo/logo-oficial/logo-01.svg" alt="KGestão de Marcas" class="header-logo-img logo-light" style="height: 32px;">
+        <img src="logo/logo-oficial/logo-02.svg" alt="KGestão de Marcas" class="header-logo-img logo-dark" style="height: 32px;">
+      </a>
+
+      <div class="header-actions">
+        <!-- Alternador de Tema Apple -->
+        <button class="btn-icon" id="theme-toggle" title="Alternar tema" aria-label="Alternar tema">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="5"></circle>
+            <line x1="12" y1="1" x2="12" y2="3"></line>
+            <line x1="12" y1="21" x2="12" y2="23"></line>
+            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+            <line x1="1" y1="12" x2="3" y2="12"></line>
+            <line x1="21" y1="12" x2="23" y2="12"></line>
+            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+          </svg>
+        </button>
+
+        <!-- Ação para abrir o Briefing Público -->
+        <a href="index.html" target="_blank" class="btn btn-secondary btn-sm">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
+          Abrir Briefing do Cliente
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Container Principal do Dashboard -->
+  <main class="dashboard-wrapper">
+    <!-- Banner de Status do Sistema / Modo Demo -->
+    <div class="system-banner" id="system-banner">
+      <!-- Injetado dinamicamente via JS -->
+    </div>
+
+    <!-- Título Executivo -->
+    <div style="margin-bottom: 24px; display: flex; justify-content: space-between; align-items: flex-end; flex-wrap: wrap; gap: 12px;">
+      <div>
+        <div style="font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.12em; color: var(--tx-tertiary); font-weight: 700;">Visão Geral</div>
+        <h1 style="font-size: 2.2rem; margin-top: 4px;">Briefings</h1>
+      </div>
+      <div style="font-size: 0.85rem; color: var(--tx-secondary);">
+        Direção Criativa: <strong style="color: var(--tx);">Kleber Oliveira</strong>
+      </div>
+    </div>
+
+    <!-- Grade de KPIs Apple -->
+    <div class="kpi-grid">
+      <div class="kpi-card">
+        <div class="kpi-label">Total de Briefings</div>
+        <div class="kpi-value" id="kpi-total">0</div>
+        <div class="kpi-sub">Cadastrados no sistema</div>
+      </div>
+      <div class="kpi-card kpi-novos">
+        <div class="kpi-label">Novos / Não Lidos</div>
+        <div class="kpi-value" id="kpi-novos" style="color: var(--st-novo-tx);">0</div>
+        <div class="kpi-sub">Aguardando seu contato</div>
+      </div>
+      <div class="kpi-card kpi-analise">
+        <div class="kpi-label">Em Análise</div>
+        <div class="kpi-value" id="kpi-analise" style="color: var(--st-analise-tx);">0</div>
+        <div class="kpi-sub">Proposta em elaboração</div>
+      </div>
+      <div class="kpi-card kpi-andamento">
+        <div class="kpi-label">Em Andamento</div>
+        <div class="kpi-value" id="kpi-andamento" style="color: var(--st-andamento-tx);">0</div>
+        <div class="kpi-sub">Identidade em criação</div>
+      </div>
+      <div class="kpi-card kpi-concluido">
+        <div class="kpi-label">Concluídos</div>
+        <div class="kpi-value" id="kpi-concluido" style="color: var(--st-concluido-tx);">0</div>
+        <div class="kpi-sub">Marcas entregues</div>
+      </div>
+    </div>
+
+    <!-- Barra de Ferramentas com Segmented Control Apple -->
+    <div class="toolbar-card">
+      <div class="search-box">
+        <svg class="search-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="11" cy="11" r="8"></circle>
+          <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+        </svg>
+        <input type="text" class="search-input" id="search-input" placeholder="Buscar por cliente, empresa, contato, segmento...">
+      </div>
+
+      <!-- Segmented Control estilo iOS / macOS -->
+      <div class="segmented-control">
+        <button type="button" class="filter-btn active" data-status="Todos">Todos</button>
+        <button type="button" class="filter-btn" data-status="Novo">Novos</button>
+        <button type="button" class="filter-btn" data-status="Em análise">Em análise</button>
+        <button type="button" class="filter-btn" data-status="Em andamento">Em andamento</button>
+        <button type="button" class="filter-btn" data-status="Concluído">Concluídos</button>
+      </div>
+
+      <div style="min-width: 170px;">
+        <select class="form-select" id="type-filter" style="padding: 8px 12px; font-size: 0.8rem; border-radius: 10px;">
+          <option value="Todos">Todos os tipos</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Lista de Briefings -->
+    <div class="briefings-container" id="briefings-list">
+      <!-- Injetado dinamicamente via JS -->
+    </div>
+  </main>
+
+  <!-- Gaveta de Detalhes Apple Sheet / Drawer -->
+  <div class="drawer-backdrop" id="detail-drawer">
+    <div class="drawer-panel">
+      <!-- Topo da Gaveta -->
+      <div class="drawer-header">
+        <div>
+          <h2 class="drawer-client-name" id="drawer-client-name">Nome do Cliente</h2>
+          <div class="drawer-meta-line" id="drawer-meta">Marca • Data</div>
+        </div>
+        <button class="btn-icon" id="drawer-close-btn" title="Fechar painel">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+        </button>
+      </div>
+
+      <!-- Barra de Ações Rápidas Apple -->
+      <div class="drawer-actions-bar">
+        <div style="display: flex; align-items: center; gap: 8px;">
+          <label style="font-size: 0.75rem; text-transform: uppercase; color: var(--tx-tertiary); font-weight: 600;">Status:</label>
+          <select class="form-select" id="drawer-status-select" style="width: auto; padding: 6px 26px 6px 10px; font-size: 0.8rem; border-radius: 10px;">
+            <option value="Novo">Novo</option>
+            <option value="Em análise">Em análise</option>
+            <option value="Em andamento">Em andamento</option>
+            <option value="Concluído">Concluído</option>
+          </select>
+        </div>
+
+        <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
+          <a href="#" target="_blank" rel="noopener" class="btn btn-wa btn-sm" id="drawer-btn-wa">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981z"/></svg>
+            WhatsApp
+          </a>
+
+          <button type="button" class="btn btn-secondary btn-sm" id="drawer-btn-pdf">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 6 2 18 2 18 9"></polyline><path d="M6 18H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg>
+            Exportar PDF
+          </button>
+
+          <button type="button" class="btn btn-secondary btn-sm" id="drawer-btn-copy">
+            Copiar
+          </button>
+
+          <button type="button" class="btn-icon" id="drawer-btn-delete" title="Excluir briefing" style="color: #ff453a; width: 32px; height: 32px;">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+          </button>
+        </div>
+      </div>
+
+      <!-- Corpo do Dossiê do Briefing -->
+      <div class="drawer-body" id="drawer-body">
+        <!-- Injetado dinamicamente via JS -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="config.js"></script>
+  <script src="assets/js/supabase-client.js"></script>
+  <script src="assets/js/dashboard.js"></script>
+
+  <!-- Script do alternador de tema -->
+  <script>
+    const themeBtn = document.getElementById("theme-toggle");
+    function syncThemeToggleIcon(theme) {
+      if (!themeBtn) return;
+      if (theme === "dark") {
+        themeBtn.innerHTML = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>`;
+        themeBtn.title = "Mudar para modo Off-white";
+        themeBtn.setAttribute("aria-label", "Mudar para modo Off-white");
+      } else {
+        themeBtn.innerHTML = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>`;
+        themeBtn.title = "Mudar para modo escuro";
+        themeBtn.setAttribute("aria-label", "Mudar para modo escuro");
+      }
+    }
+
+    if (themeBtn) {
+      syncThemeToggleIcon(document.documentElement.getAttribute("data-theme") || "light");
+      themeBtn.onclick = () => {
+        const cur = document.documentElement.getAttribute("data-theme") || "light";
+        const next = cur === "dark" ? "light" : "dark";
+        document.documentElement.setAttribute("data-theme", next);
+        localStorage.setItem("kgestao_theme", next);
+        syncThemeToggleIcon(next);
+      };
+    }
+  </script>
+</body>
+</html>
