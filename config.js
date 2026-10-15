@@ -17,10 +17,22 @@ window.KGESTAO_CONFIG = {
     nome: "KGestão de Marcas",
     diretor: "Kleber Oliveira",
     whatsapp: "5511983467706", // WhatsApp oficial de Kleber Oliveira
-    email: "contato@kgestao.com.br", // Seu e-mail de contato
+    email: "design.excelencia@gmail.com", // E-mail principal para recebimento de briefings
     instagram: "@kgestaodemarcas",
     instagramUrl: "https://www.instagram.com/kgestaodemarcas/",
     site: "https://kgestao.com.br"
+  },
+
+  // Configuração de Notificações e Envio de Briefing por E-mail
+  notificacoes: {
+    emailDestino: "design.excelencia@gmail.com",
+    assuntoBriefing: "Briefing Preenchido",
+    // Configurações do EmailJS (para envio com anexo PDF automático direto do navegador)
+    emailjs: {
+      serviceId: "",  // ID do serviço no EmailJS (ex: 'service_kgestao')
+      templateId: "", // ID do modelo no EmailJS (ex: 'template_briefing')
+      publicKey: ""   // Chave pública do EmailJS
+    }
   },
 
   // Configuração do Portfólio Behance

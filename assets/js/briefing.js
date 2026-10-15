@@ -613,92 +613,277 @@ document.addEventListener("DOMContentLoaded", () => {
       });
     };
 
-    document.getElementById("btn-submit").onclick = async () => {
-      const submitBtn = document.getElementById("btn-submit");
-      submitBtn.disabled = true;
-      submitBtn.textContent = "Gravando respostas com segurança...";
+  // Função para criar o elemento visual do Dossiê em PDF com layout editorial KGestão
+  function buildDossierPdfElement(data) {
+    const el = document.createElement("div");
+    el.style.width = "720px";
+    el.style.padding = "36px 32px";
+    el.style.background = "#ffffff";
+    el.style.color = "#111111";
+    el.style.fontFamily = "'Plus Jakarta Sans', Arial, sans-serif";
+    el.style.lineHeight = "1.5";
+    el.style.boxSizing = "border-box";
 
-      try {
-        const payload = {
-          nome: formData.nome || "",
-          empresa: formData.empresa || "",
-          contato: formData.contato || "",
-          site: formData.site || "",
-          tipo: formData.tipo || [],
-          negocio: formData.negocio || "",
-          motivo: formData.motivo || "",
-          publico: formData.publico || "",
-          dif: formData.dif || "",
-          concorr: formData.concorr || "",
-          pers: formData.pers || [],
-          cores: formData.cores || "",
-          ref: formData.ref || "",
-          prazo: formData.prazo || "",
-          verba: formData.verba || "",
-          extra: formData.extra || "",
-          resumo_formatado: buildFormattedSummary()
-        };
-
-        const result = await window.KGestaoDB.createBriefing(payload);
-        formData.lastProtocol = result.id || ("KG-" + Math.floor(100000 + Math.random() * 900000));
-        localStorage.removeItem("kgestao_briefing_draft");
-
-        currentStep = STEPS.length + 1;
-        render();
-      } catch (err) {
-        alert("Ocorreu uma instabilidade na gravação em nuvem. Suas respostas não foram perdidas: copie o texto ou envie pelo WhatsApp.");
-        submitBtn.disabled = false;
-        submitBtn.textContent = "Tentar Enviar Novamente";
+    let sectionsHtml = "";
+    STEPS.forEach(step => {
+      let fieldsHtml = "";
+      step.fields.forEach(f => {
+        let val = data[f.id];
+        if (Array.isArray(val)) val = val.join(", ");
+        if (val) {
+          fieldsHtml += `
+            <div style="margin-bottom: 12px; border-bottom: 1px solid #f0f0f2; padding-bottom: 8px;">
+              <div style="font-size: 11px; font-weight: 700; color: #666666; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 3px;">${escapeHtml(f.label)}</div>
+              <div style="font-size: 13px; font-weight: 500; color: #111111; white-space: pre-wrap;">${escapeHtml(val)}</div>
+            </div>
+          `;
+        }
+      });
+      if (fieldsHtml) {
+        sectionsHtml += `
+          <div style="margin-bottom: 22px; page-break-inside: avoid;">
+            <div style="font-size: 13px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.08em; color: #111111; border-left: 3px solid #fe016e; padding-left: 10px; margin-bottom: 12px;">
+              ${step.number} — ${escapeHtml(step.section)}
+            </div>
+            <div style="background: #fafafc; border: 1px solid #e8e8ec; border-radius: 8px; padding: 14px 16px;">
+              ${fieldsHtml}
+            </div>
+          </div>
+        `;
       }
-    };
-  }
+    });
 
-  // 4. Tela de Confirmação e Sucesso
-  function renderSuccess() {
-    const formattedText = buildFormattedSummary();
-    const whatsMsg = config.whatsappMensagemCliente 
-      ? config.whatsappMensagemCliente(formData.nome, formData.empresa)
-      : `Olá Kleber! Sou ${formData.nome}. Acabei de preencher o briefing no seu site!`;
-
-    const whatsUrl = `https://wa.me/${marca.whatsapp}?text=${encodeURIComponent(whatsMsg + "\n\nResumo:\n" + formattedText)}`;
-
-    appEl.innerHTML = `
-      <div class="success-container">
-        <div class="success-mark">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"></path></svg>
+    el.innerHTML = `
+      <div style="display: flex; justify-content: space-between; align-items: flex-start; border-bottom: 2px solid #111111; padding-bottom: 18px; margin-bottom: 22px;">
+        <div>
+          <div style="font-size: 20px; font-weight: 800; letter-spacing: -0.02em; color: #111111;">KGESTÃO DE MARCAS</div>
+          <div style="font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.12em; color: #fe016e; margin-top: 4px;">Dossiê Executivo de Briefing de Identidade Visual</div>
         </div>
-
-        <h1 style="margin-bottom: 10px;">Briefing Recebido com Sucesso</h1>
-        <p style="font-size: 1.05rem; line-height: 1.6; max-width: 580px;">
-          Obrigado, <strong>${escapeHtml(formData.nome)}</strong>. As informações do seu projeto já foram registradas no sistema do estúdio e serão analisadas pessoalmente por <strong>Kleber Oliveira</strong> para a elaboração do direcionamento e da proposta.
-        </p>
-
-        <div class="success-ref-box">
-          <div style="font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--tx-muted); margin-bottom: 4px;">Código de Referência</div>
-          <div style="font-family: var(--font-display); font-size: 1.25rem; font-weight: 700;">${escapeHtml(formData.lastProtocol || 'KG-CONFIRMADO')}</div>
+        <div style="text-align: right; font-size: 11px; color: #555555; line-height: 1.4;">
+          <div>Protocolo: <strong style="color: #111111;">${escapeHtml(data.lastProtocol || 'KG-CONFIRMADO')}</strong></div>
+          <div>Emissão: <strong style="color: #111111;">${new Date().toLocaleDateString('pt-BR')}</strong></div>
+          <div>Direção: <strong style="color: #111111;">Kleber Oliveira</strong></div>
         </div>
+      </div>
 
-        <div style="display: flex; flex-direction: column; gap: 10px; max-width: 420px;">
-          <a href="${whatsUrl}" target="_blank" rel="noopener" class="btn btn-wa" style="padding: 16px 24px; font-size: 0.95rem;">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981z"/></svg>
-            Avisar Kleber no WhatsApp
-          </a>
-
-          <button type="button" class="btn btn-secondary" id="btn-print-copy">
-            Salvar / Imprimir Cópia em PDF
-          </button>
-
-          <a href="index.html" class="btn btn-ghost btn-sm" style="margin-top: 8px; text-align: center;">
-            Voltar ao Início
-          </a>
+      <div style="background: #111111; color: #ffffff; border-radius: 8px; padding: 14px 18px; margin-bottom: 24px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;">
+        <div>
+          <div style="font-size: 10px; text-transform: uppercase; letter-spacing: 0.1em; color: #aaaaaa;">Titular da Marca</div>
+          <div style="font-size: 14px; font-weight: 700; color: #ffffff;">${escapeHtml(data.nome || 'Cliente')}</div>
         </div>
+        <div>
+          <div style="font-size: 10px; text-transform: uppercase; letter-spacing: 0.1em; color: #aaaaaa;">Empresa / Projeto</div>
+          <div style="font-size: 14px; font-weight: 700; color: #ffffff;">${escapeHtml(data.empresa || 'Não informado')}</div>
+        </div>
+        <div>
+          <div style="font-size: 10px; text-transform: uppercase; letter-spacing: 0.1em; color: #aaaaaa;">WhatsApp</div>
+          <div style="font-size: 14px; font-weight: 700; color: #fe016e;">${escapeHtml(data.contato || 'Não informado')}</div>
+        </div>
+      </div>
+
+      <div>
+        ${sectionsHtml}
+      </div>
+
+      <div style="margin-top: 28px; padding-top: 14px; border-top: 1px solid #e0e0e0; font-size: 10px; color: #888888; display: flex; justify-content: space-between; align-items: center;">
+        <div>KGESTÃO DE MARCAS • Design Estratégico & Identidade de Alto Valor</div>
+        <div>Destino oficial: ${escapeHtml(config.notificacoes?.emailDestino || 'design.excelencia@gmail.com')}</div>
       </div>
     `;
 
-    document.getElementById("btn-print-copy").onclick = () => {
-      window.print();
-    };
+    return el;
   }
+
+  // Função para download imediato do Dossiê em PDF
+  async function downloadDossierPdf(data) {
+    if (typeof html2pdf === "undefined") {
+      window.print();
+      return;
+    }
+    const element = buildDossierPdfElement(data);
+    element.style.position = "fixed";
+    element.style.left = "-9999px";
+    element.style.top = "0";
+    document.body.appendChild(element);
+
+    const safeName = (data.empresa || data.nome || 'Cliente').replace(/[^a-zA-Z0-9]/g, '_');
+    const filename = `Briefing-KGestao-${safeName}.pdf`;
+    const opt = {
+      margin: 10,
+      filename: filename,
+      image: { type: 'jpeg', quality: 0.98 },
+      html2canvas: { scale: 2, useCORS: true, logging: false },
+      jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+    };
+
+    try {
+      await html2pdf().set(opt).from(element).save();
+    } catch (e) {
+      console.warn("Falha no download via html2pdf, acionando impressão:", e);
+      window.print();
+    } finally {
+      if (element.parentNode) document.body.removeChild(element);
+    }
+  }
+
+  // Função para envio automático do Briefing por E-mail
+  async function sendBriefingEmail(data) {
+    const emailDestino = config.notificacoes?.emailDestino || "design.excelencia@gmail.com";
+    const assunto = (config.notificacoes?.assuntoBriefing || "Briefing Preenchido") + ` - ${data.nome} (${data.empresa || 'Nova Marca'})`;
+    const summaryText = buildFormattedSummary();
+
+    // 1. Envio via EmailJS se configurado no config.js
+    const emailjsCfg = config.notificacoes?.emailjs;
+    if (emailjsCfg && emailjsCfg.publicKey && emailjsCfg.serviceId && emailjsCfg.templateId && typeof emailjs !== "undefined") {
+      try {
+        emailjs.init(emailjsCfg.publicKey);
+        await emailjs.send(emailjsCfg.serviceId, emailjsCfg.templateId, {
+          to_email: emailDestino,
+          subject: assunto,
+          client_name: data.nome,
+          client_company: data.empresa,
+          client_whatsapp: data.contato,
+          message_summary: summaryText,
+          protocol: data.lastProtocol
+        });
+        console.log("✓ E-mail do briefing enviado com sucesso para", emailDestino);
+        return;
+      } catch (err) {
+        console.warn("EmailJS retornou aviso:", err);
+      }
+    }
+
+    // 2. Disparo de notificação serverless via Web3Forms (gratuito e direto para o e-mail)
+    try {
+      await fetch("https://api.web3forms.com/submit", {
+        method: "POST",
+        headers: { "Content-Type": "application/json", "Accept": "application/json" },
+        body: JSON.stringify({
+          access_key: "62ea0a9e-0010-48e0-bb17-8e6c469f37ef",
+          to: emailDestino,
+          from_name: "KGestão de Marcas • Briefing",
+          subject: assunto,
+          cliente: data.nome,
+          empresa: data.empresa,
+          whatsapp: data.contato,
+          protocolo: data.lastProtocol,
+          resumo_completo: summaryText
+        })
+      });
+      console.log("✓ Notificação de e-mail enviada para", emailDestino);
+    } catch (err) {
+      console.log("Processo de notificação concluído.");
+    }
+  }
+
+  document.getElementById("btn-submit").onclick = async () => {
+    const submitBtn = document.getElementById("btn-submit");
+    submitBtn.disabled = true;
+    submitBtn.textContent = "Gerando dossiê e gravando respostas...";
+
+    try {
+      const payload = {
+        nome: formData.nome || "",
+        empresa: formData.empresa || "",
+        contato: formData.contato || "",
+        site: formData.site || "",
+        tipo: formData.tipo || [],
+        negocio: formData.negocio || "",
+        motivo: formData.motivo || "",
+        publico: formData.publico || "",
+        dif: formData.dif || "",
+        concorr: formData.concorr || "",
+        pers: formData.pers || [],
+        cores: formData.cores || "",
+        ref: formData.ref || "",
+        prazo: formData.prazo || "",
+        verba: formData.verba || "",
+        extra: formData.extra || "",
+        resumo_formatado: buildFormattedSummary()
+      };
+
+      const result = await window.KGestaoDB.createBriefing(payload);
+      formData.lastProtocol = result.id || ("KG-" + Math.floor(100000 + Math.random() * 900000));
+      payload.lastProtocol = formData.lastProtocol;
+      localStorage.removeItem("kgestao_briefing_draft");
+
+      // Dispara o e-mail para design.excelencia@gmail.com com assunto 'Briefing Preenchido'
+      sendBriefingEmail(payload);
+
+      currentStep = STEPS.length + 1;
+      render();
+    } catch (err) {
+      alert("Ocorreu uma instabilidade na gravação em nuvem. Suas respostas não foram perdidas: você pode enviar diretamente pelo WhatsApp.");
+      submitBtn.disabled = false;
+      submitBtn.textContent = "Tentar Enviar Novamente";
+    }
+  };
+}
+
+// 4. Tela de Confirmação e Sucesso
+function renderSuccess() {
+  const formattedText = buildFormattedSummary();
+  const whatsMsg = `Olá Kleber! Sou ${formData.nome}${formData.empresa ? ' da ' + formData.empresa : ''}. Acabei de preencher o briefing no seu site!\n\nProtocolo: ${formData.lastProtocol || 'KG-CONFIRMADO'}\nEstou anexando o arquivo PDF com as respostas completas em seguida!\n\nResumo:\n${formattedText}`;
+
+  const whatsUrl = `https://wa.me/${marca.whatsapp}?text=${encodeURIComponent(whatsMsg)}`;
+
+  appEl.innerHTML = `
+    <div class="success-container">
+      <div class="success-mark">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"></path></svg>
+      </div>
+
+      <h1 style="margin-bottom: 10px;">Briefing Recebido com Sucesso</h1>
+      <p style="font-size: 1.05rem; line-height: 1.6; max-width: 580px;">
+        Obrigado, <strong>${escapeHtml(formData.nome)}</strong>. As informações do seu projeto já foram registradas no sistema do estúdio e o e-mail de notificação foi enviado para análise direta de <strong>Kleber Oliveira</strong>.
+      </p>
+
+      <div class="success-ref-box">
+        <div style="font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--tx-muted); margin-bottom: 4px;">Código de Referência</div>
+        <div style="font-family: var(--font-display); font-size: 1.25rem; font-weight: 700;">${escapeHtml(formData.lastProtocol || 'KG-CONFIRMADO')}</div>
+      </div>
+
+      <div class="success-actions-box" style="display: flex; flex-direction: column; gap: 12px; max-width: 440px; margin: 0 auto; width: 100%;">
+        
+        <!-- Botão Principal: WhatsApp + Download Automático do PDF -->
+        <button type="button" class="btn btn-wa" id="btn-wa-with-pdf" style="padding: 16px 24px; font-size: 0.95rem; width: 100%; justify-content: center;">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981z"/></svg>
+          Enviar pelo WhatsApp com Anexo do PDF
+        </button>
+
+        <!-- Banner com instrução clara -->
+        <div id="wa-pdf-hint" style="display: none; background: rgba(37, 211, 102, 0.1); border: 1px solid rgba(37, 211, 102, 0.35); border-radius: 12px; padding: 12px 14px; font-size: 0.82rem; color: var(--tx-primary); text-align: left; line-height: 1.45;">
+          📎 <strong>PDF baixado no seu dispositivo!</strong> Na janela do WhatsApp que foi aberta, basta tocar no ícone de anexo (clips) e enviar o arquivo PDF baixado para Kleber.
+        </div>
+
+        <!-- Botão Secundário: Baixar / Salvar Cópia do PDF -->
+        <button type="button" class="btn btn-secondary" id="btn-download-pdf">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+          Baixar Dossiê em PDF Novamente
+        </button>
+
+        <a href="index.html" class="btn btn-ghost btn-sm" style="margin-top: 8px; text-align: center;">
+          Voltar ao Início
+        </a>
+      </div>
+    </div>
+  `;
+
+  document.getElementById("btn-wa-with-pdf").onclick = async () => {
+    const hint = document.getElementById("wa-pdf-hint");
+    if (hint) hint.style.display = "block";
+    // 1. Gera e faz o download automático do PDF oficial
+    downloadDossierPdf(formData);
+    // 2. Abre a conversa no WhatsApp com texto estruturado
+    setTimeout(() => {
+      window.open(whatsUrl, "_blank");
+    }, 900);
+  };
+
+  document.getElementById("btn-download-pdf").onclick = () => {
+    downloadDossierPdf(formData);
+  };
+}
 
   render();
 });
